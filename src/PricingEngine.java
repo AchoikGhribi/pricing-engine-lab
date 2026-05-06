@@ -1,46 +1,34 @@
+package com.example;
+
 import java.util.Scanner;
 
 public class PricingEngine {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        Order order = new Order();
 
         System.out.print("Enter number of items: ");
         int n = scanner.nextInt();
 
-        double[] prices = new double[n];
-        int[] quantities = new int[n];
-
-        for(int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             System.out.print("Enter price for item " + (i + 1) + ": ");
-            prices[i] = scanner.nextDouble();
+            double price = scanner.nextDouble();
             System.out.print("Enter quantity: ");
-            quantities[i] = scanner.nextInt();
+            int quantity = scanner.nextInt();
+            order.addItem(price, quantity);
         }
 
         System.out.print("Customer type (REGULAR/VIP): ");
-        String customerType = scanner.next();
+        order.setCustomerType(CustomerType.valueOf(scanner.next().toUpperCase()));
 
         System.out.print("Discount code (SAVE10/SAVE20/NONE): ");
-        String discountCode = scanner.next();
+        order.setDiscountCode(DiscountCode.valueOf(scanner.next().toUpperCase()));
 
-        double subtotal = 0;
-        for(int i = 0; i < n; i++) {
-            subtotal += prices[i] * quantities[i];
-        }
-
-        double discount = 0;
-        if(discountCode.equals("SAVE10")) {
-            discount = subtotal * 0.10;
-        } else if(discountCode.equals("SAVE20")) {
-            discount = subtotal * 0.20;
-        }
-
-        if(customerType.equals("VIP")) {
-            discount += subtotal * 0.05;
-        }
-
+        PricingCalculator calculator = new PricingCalculator();
+        double subtotal = calculator.calculateSubtotal(order);
+        double discount = calculator.calculateDiscount(subtotal, order);
         double afterDiscount = subtotal - discount;
-        double tax = afterDiscount * 0.15;
+        double tax = calculator.calculateTax(afterDiscount);
         double finalPrice = afterDiscount + tax;
 
         System.out.println("Subtotal: " + subtotal);
