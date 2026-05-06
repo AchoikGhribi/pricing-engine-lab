@@ -115,5 +115,6 @@ pricing-engine-lab/
 └── README.md           # Project documentation
 
 Author
-GHRIBI ACHOIK
+GHRIBI ACHOIK  G2
+
 
